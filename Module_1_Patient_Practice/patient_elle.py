@@ -2,7 +2,7 @@
 
 import csv
 
-with open("/Users/ellepickard/Documents/Computational BME/Module 1/Module1_Patient_Practice/Metadata and Protein Data for Module 1.csv", newline="") as f:
+with open("/Users/ellepickard/Documents/Computational BME/Module 1/Module1_CompBME/Metadata and Protein Data for Module 1.csv", newline="") as f:
         reader = csv.reader(f)
         headers = next(reader) # Get the first row
         for h in headers:
@@ -211,7 +211,7 @@ class Patient:
 #Again, used ChatGPT above to help me create the representer method; copying all the attributes 
 
 #Creating patient objects from the csv file using DictReader to read the csv. 
-with open("/Users/ellepickard/Documents/Computational BME/Module 1/Module1_Patient_Practice/Metadata and Protein Data for Module 1.csv", newline="") as f:
+with open("/Users/ellepickard/Documents/Computational BME/Module 1/Module1_CompBME/Metadata and Protein Data for Module 1.csv", newline="") as f:
     reader = csv.DictReader(f)
 
     for row in reader:

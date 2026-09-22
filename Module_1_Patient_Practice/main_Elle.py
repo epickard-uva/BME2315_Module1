@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import numpy as np
 import statistics 
+import pandas as pd 
+from sklearn.linear_model import LinearRegression 
 
 
 # #Sort and Print Patients based on age at death from youngest to oldest
@@ -71,7 +73,15 @@ plt.text(
     f"{x_age_dementia_male:.2f}",
     ha='center'
 )
+plt.text(.9 , 90 , f"One-way_ANOVA: p = {p_value:.3f}", ha='right', va='top', fontsize=9)
+
 plt.show()
+
+#Statistical Significance
+#Run a one-way ANOVA for the bar graphs 
+f_stat, p_value = stats.f_oneway(age_dementia_female, age_dementia_male)
+print("f-statistic:", f_stat)
+print("p_value:", p_value)
 
 
 
@@ -94,9 +104,37 @@ X = [patient_brain_weight]
 Y = [patient_amyloid_beta_42]
 
 
+#Statistical Significance
+#Linear Regression
+
+X = np.array(patient_brain_weight, dtype=float).reshape(-1, 1)
+Y = np.array(patient_amyloid_beta_42, dtype=float)
+
+model = LinearRegression()
+model.fit(X, Y)
+
+slope = model.coef_[0]
+intercept = model.intercept_
+r2 = model.score(X, Y)
+
+#Annotate the equation 
+equation = f"y = {slope:.2f}x + {intercept:.2f}\nR^2 = {r2:.2f}"
+
+plt.text(
+    0.95, 0.95,
+    equation,
+    transform=plt.gca().transAxes,
+    ha='right',
+    va='top',
+    color="red",
+    fontsize=12
+)
+
 plt.scatter(X, Y, color='blue')
+plt.plot(X, model.predict(X), color="red")
 plt.xlabel('Fresh Brain Weight')
 plt.ylabel('Amyloid-Beta42 Levels')
 plt.title('Scatter Plot of Fresh Brain Weight vs Amyloid-Beta42 Levels')
 plt.show()
 
+#Used chat for code above to help plot 
