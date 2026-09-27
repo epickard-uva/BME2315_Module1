@@ -55,12 +55,18 @@ mean_sex = [x_age_dementia_female, x_age_dementia_male]
 stdev_sex = [age_dementia_female_stdev, age_dementia_male_stdev]
 yerr = [np.zeros(len(mean_sex)), stdev_sex]
 
+#Statistical Significance
+#Run a one-way ANOVA for the bar graphs 
+f_stat, p_value = stats.f_oneway(age_dementia_female, age_dementia_male)
+print("f-statistic:", f_stat)
+print("p_value:", p_value)
 
-#Creating bar graph for mean age of dementia diagnosis by gender
+# Creating bar graph for mean age of dementia diagnosis by gender
 plt.bar(patient_groups_cols, mean_sex, yerr=yerr, capsize=10, color=["blue", "orange"])
 plt.title("Average Age of Dementia Diagnosis by Gender")
 plt.xlabel("Gender")
 plt.ylabel("Average Age (years)")
+plt.text(0.5, max(mean_sex) + 5, f"One-way_ANOVA: p = {p_value:.3f}", ha='center', fontsize=9)
 plt.text(
     0,
     x_age_dementia_female + 11,
@@ -73,16 +79,7 @@ plt.text(
     f"{x_age_dementia_male:.2f}",
     ha='center'
 )
-plt.text(.9 , 90 , f"One-way_ANOVA: p = {p_value:.3f}", ha='right', va='top', fontsize=9)
-
 plt.show()
-
-#Statistical Significance
-#Run a one-way ANOVA for the bar graphs 
-f_stat, p_value = stats.f_oneway(age_dementia_female, age_dementia_male)
-print("f-statistic:", f_stat)
-print("p_value:", p_value)
-
 
 
 #Creating a scatter plot to visualize relationship between fresh brain weight and amyloid-beta 42 levels in patients
@@ -90,11 +87,11 @@ patient_brain_weight = []
 patient_amyloid_beta_42 = []
 
 for patient in Patient.all_patients:
+
     if (patient.fresh_brain_weight != "" 
         and patient.fresh_brain_weight != "Unavailable"
         and patient.abeta42 != ""
-        and patient.abeta42 != "Unavailable" 
-        and float(patient.abeta42) < 600): #Exlcuded outliers to see graph and relationship better 
+        and patient.abeta42 != "Unavailable"):
 
         patient_brain_weight.append(float(patient.fresh_brain_weight))
         patient_amyloid_beta_42.append(float(patient.abeta42))
