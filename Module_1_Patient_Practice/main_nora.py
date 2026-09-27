@@ -116,3 +116,7 @@ plt.show()
 
 #Citation: I used AI to help clarify Python concepts, troubleshoot errors, and improve code documentation. 
 #I wrote and adapted the code myself and reviewed the final code to ensure I understood it.
+
+
+
+#trying to make changes to push to git  

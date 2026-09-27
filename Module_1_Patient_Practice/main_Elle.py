@@ -7,41 +7,41 @@ import statistics
 import pandas as pd 
 from sklearn.linear_model import LinearRegression 
 
-#Using class method to sorting for patients in a subset
-#Creating lists to hold subset APOE genotypes for grouping 
-subset_2 = Patient.create_subset(
-    "apoe_genotype", "2_3",
-    "apoe_genotype", "2_3"
-)
-subset_3 = Patient.create_subset(
-    "apoe_genotype", "2_2",
-    "apoe_genotype", "2_2"
-)
-subset_4 = Patient.create_subset(
-    "apoe_genotype", "2_4",
-    "apoe_genotype", "2_4"
-)
-apoe_2 = subset_2 + subset_3 + subset_4
 
-apoe_3_3 = Patient.create_subset(
-    "apoe_genotype", "3_3",
-    "apoe_genotype", "3_3"
-)
+# #Sort and Print Patients based on age at death from youngest to oldest
+Patient.all_patients.sort(key=lambda patient: patient.age_at_death)
 
-apoe_3_4 = Patient.create_subset(
+for patient in Patient.all_patients:
+    print(patient) 
+
+
+#Testing class method for sorting patients with two attributes 
+#Testing for subset of patients with APOE Genotype 3_4 and cognitive status Dementia
+subset = Patient.create_subset(
     "apoe_genotype", "3_4",
-    "apoe_genotype", "3_4"
+    "cognitive_status", "Dementia"
 )
 
-apoe_4_4 = Patient.create_subset(
-    "apoe_genotype", "4_4",
-    "apoe_genotype", "4_4"
-)
+print("\n SUBSET: Number of patients in subset:", len(subset))
+
+for patient in subset:
+    print(patient)
+
 
 # Make a bar graph that compares the mean (+/- standard deviation) of an attribute 
+# that you are interested in between female and male patients (e.g. Amyloid-Beta42 levels in female vs. male patients with dementia)
 
+#Creating lists to hold subset
+age_dementia_female = []
+age_dementia_male = []
 
 #Filtering and getting mean/stdev of subset data
+for patient in Patient.all_patients:
+    if patient.sex == "Female" and patient.age_of_dementia_diagnosis != "":
+        age_dementia_female.append(int(patient.age_of_dementia_diagnosis))
+    elif patient.sex == "Male" and patient.age_of_dementia_diagnosis != "":
+        age_dementia_male.append(int(patient.age_of_dementia_diagnosis))
+
 x_age_dementia_female = (statistics.mean(age_dementia_female))
 x_age_dementia_male = (statistics.mean(age_dementia_male))
 age_dementia_female_stdev = (statistics.stdev(age_dementia_female))
@@ -135,4 +135,3 @@ plt.title('Scatter Plot of Fresh Brain Weight vs Amyloid-Beta42 Levels')
 plt.show()
 
 #Used chat for code above to help plot 
-
