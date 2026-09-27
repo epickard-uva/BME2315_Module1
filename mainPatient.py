@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import numpy as np
 import statistics 
+import pandas as pd
+from sklearn.linear_model import LinearRegression
 
 #lists female and male beta levels 
 
@@ -56,11 +58,25 @@ stdev_sex = [beta_female_stdev, beta_male_stdev]
 
 yerr = [np.zeros(len(mean_sex)), stdev_sex]
 
+#Run one-way ANOVA 
+f_stat, p_value = stats.f_oneway(beta_female_stdev,beta_male_stdev )
+
+# calculates p-value using independent t-test
+t_stat, p_val = stats.ttest_ind(female_beta, male_beta)
+print(f't_stat = {t_stat}, p_val = {p_val}')
+
 plt.bar(Patient_sex_cols, mean_sex, yerr=yerr, capsize=10)
 
 plt.title("Mean Amyloid-Beta42 Levels by Sex")
 plt.xlabel("Sex")
 plt.ylabel("Amyloid-Beta42 (pg/ug)")
+
+y_max = max(mean_sex) + max(stdev_sex) * 0.4
+
+plt.text(0.5, y_max,
+         f"t = {t_stat:.2f}\np = {p_val:.3e}",
+         ha='center',
+         va='bottom')
 
 plt.show()
 
@@ -76,12 +92,26 @@ for patient in Patient.all_patients:
 X = [patient_age]
 y = [patient_beta]
 
-plt.scatter(X, y, color='blue')
+X = np.array(patient_age).reshape(-1, 1) 
+y = np.array(patient_beta)
+
+#for the linear regression 
+model = LinearRegression()
+model.fit(X, y)
+
+slope = model.coef_[0]
+intercept = model.intercept_
+r2 = model.score(X, y)
+
+#annotate equation 
+equation = f"y = {slope:.2f}x + {intercept:.2f}\nR² = {r2:.2f}"
+plt.text(X.max() * 0.75, y.max() * 0.90, equation, color="red", fontsize=12, verticalalignment='top')
 
 plt.xlabel('Age at Death')
 plt.ylabel('Amyloid-Beta42 (pg/ug)')
 plt.title('Scatter Plot of Amyloid-Beta42 vs Age at Death')
-
+plt.scatter(X, y, color='blue')
+plt.plot(X, model.predict(X), color="red")
 plt.show()
 
 #Citation: I used AI to help clarify Python concepts, troubleshoot errors, and improve code documentation. 
