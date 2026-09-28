@@ -135,6 +135,7 @@ plt.title('Scatter Plot of Fresh Brain Weight vs Amyloid-Beta42 Levels')
 plt.show()
 #BEGINNING OF MY CODE 
 # calculating the number of people with dementia for each genotype 
+df = pd.read_csv("Metadata and Protein Data for Module 1.csv")
 apoe_genotypes = ['3_3', '3_4', '4_4']
 observed_prevalence = []
 for genotype in apoe_genotypes:
@@ -146,9 +147,10 @@ for genotype in apoe_genotypes:
 
 print(observed_prevalence)
 #chi square test for statistical analysis 
+apoe_data = df[df['APOE Genotype'].isin(['3_3', '3_4', '4_4'])]
 contingency_table = pd.crosstab(
-    df['APOE Genotype'],
-    df['Cognitive Status'] == 'Dementia'
+    apoe_data['APOE Genotype'],
+    apoe_data['Cognitive Status'] == 'Dementia'
 )
 print("Contingency Table: ")
 print(contingency_table)
@@ -169,15 +171,6 @@ error_lower = risk_mean - risk_lower
 error_upper = risk_upper - risk_mean
 #creating error bars
 yerr = [error_lower, error_upper]
-
-# Calculate observed dementia prevalence from dataset
-observed_prevalence = []
-for genotype in apoe_genotypes:
-    genotype_data = df[df['APOE Genotype'] == genotype]
-    dementia_count = (genotype_data['Cognitive Status'] == 'Dementia').sum()
-    total_count = len(genotype_data)
-    prevalence = dementia_count / total_count * 100
-    observed_prevalence.append(prevalence)
 
 # Create grouped bar graph
 x = np.arange(len(apoe_genotypes))
@@ -206,7 +199,7 @@ plt.title("Observed Dementia Prevalence vs. Reported Lifetime Risk by APOE Genot
 plt.legend()
 plt.text(
     0.5, 0.95, 
-    f"Chi-square p-value = {p_value: .4f}",
+    f"Chi-square p-value = {p_value:.4f}",
     transform =plt.gca().transAxes,
     ha='center'
 )
