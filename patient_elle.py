@@ -2,13 +2,6 @@
 
 import csv
 
-with open("/Users/ellepickard/Documents/Computational BME/Module 1/Module1_CompBME/Metadata and Protein Data for Module 1.csv", newline="") as f:
-        reader = csv.reader(f)
-        headers = next(reader) # Get the first row
-        for h in headers:
-            print(h)
-
-
 #OOP and Class of Patient Objects
 class Patient: 
     all_patients = [] 

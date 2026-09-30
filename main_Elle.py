@@ -218,7 +218,7 @@ plt.bar(
     capsize=10,
     color=["blue", "green", "orange", "red"]
 )
-plt.title("Average tTau by APOE Genotype")
+plt.title("Average pTau by APOE Genotype")
 plt.xlabel("APOE Genotype")
 plt.ylabel("Average pTau (pg/ug)")
 plt.text(
